@@ -66,7 +66,7 @@ const VehicleAd: React.FC = () => {
             return (
               <div className="card" key={ad.id} style={{marginBottom: '1.5rem'}}>
                 <h2>{ad.title}</h2>
-                <p><strong>Sürücü:</strong> {ad.carrierName}</p>
+                <p><strong>İlan Sahibi:</strong> {ad.carrierName}</p>
                 <p><strong>Açıklama:</strong> {ad.description}</p>
                 <p><strong>Araç Tipi:</strong> {ad.vehicleType}</p>
                 <p><strong>Lokasyon:</strong> {ad.city}, {ad.country}</p>

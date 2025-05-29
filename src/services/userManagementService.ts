@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from './baseService';
 
 // Base URL will need to be updated with your actual API endpoint
 const API_URL = '/api/users/';
@@ -33,12 +34,18 @@ const deleteUser = async (id: string) => {
   return response.data;
 };
 
+const fetchUserInfoById = async (id: string) => {
+  const response = await axiosInstance.get(`${id}`);
+  return response.data;
+};
+
 const userManagementService = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  fetchUserInfoById,
 };
 
 export default userManagementService;

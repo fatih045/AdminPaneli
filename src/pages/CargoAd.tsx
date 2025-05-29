@@ -66,7 +66,7 @@ const CargoAd: React.FC = () => {
             return (
               <div className="card" key={ad.id} style={{marginBottom: '1.5rem'}}>
                 <h2>{ad.title}</h2>
-                <p><strong>Müşteri:</strong> {ad.customerName}</p>
+                <p><strong>İlan Sahibi:</strong> {ad.customerName}</p>
                 <p><strong>Açıklama:</strong> {ad.description}</p>
                 <p><strong>Yük Tipi:</strong> {ad.cargoType} | <strong>Ağırlık:</strong> {ad.weight} kg</p>
                 <p><strong>Çıkış:</strong> {ad.pickCity}, {ad.pickCountry} &rarr; <strong>Varış:</strong> {ad.dropCity}, {ad.dropCountry}</p>

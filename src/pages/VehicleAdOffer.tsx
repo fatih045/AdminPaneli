@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../store/store';
 import { getAllVehicleOffers, acceptVehicleOffer, rejectVehicleOffer } from '../slice/vehicleAdOfferSlice';
 import type { VehicleOffer } from '../services/vehicleAdOfferService';
+import userManagementService from '../services/userManagementService';
 
 const getAdminId = () => {
   const userStr = localStorage.getItem('user');
@@ -20,6 +21,7 @@ const VehicleAdOffer: React.FC = () => {
   const { vehicleOffers, isLoading, isError, message } = useSelector((state: RootState & { vehicleAdOffer: any }) => state.vehicleAdOffer);
   const adminId = getAdminId();
   const [actionedIds, setActionedIds] = useState<{[offerId: number]: boolean}>({});
+  const [userNames, setUserNames] = useState<{[id: string]: string}>({});
 
   useEffect(() => {
     dispatch(getAllVehicleOffers());
@@ -35,6 +37,24 @@ const VehicleAdOffer: React.FC = () => {
         return updated;
       });
     }
+  }, [vehicleOffers]);
+
+  useEffect(() => {
+    const ids = new Set<string>();
+    vehicleOffers.forEach((offer: VehicleOffer) => {
+      if (offer.senderId) ids.add(offer.senderId.toString());
+      if (offer.receiverId) ids.add(offer.receiverId.toString());
+    });
+    Array.from(ids).forEach(async (id) => {
+      if (!userNames[id]) {
+        try {
+          const data = await userManagementService.fetchUserInfoById(id);
+          setUserNames(prev => ({ ...prev, [id]: `${data.name} ${data.surname}` }));
+        } catch {
+          setUserNames(prev => ({ ...prev, [id]: id }));
+        }
+      }
+    });
   }, [vehicleOffers]);
 
   const handleAccept = (id: number) => {
@@ -62,13 +82,14 @@ const VehicleAdOffer: React.FC = () => {
         {!isLoading && !isError && vehicleOffers.length === 0 && <p>No vehicle offers found.</p>}
         {vehicleOffers
           .filter((offer: VehicleOffer) => !(adminId && (offer.admin1Id === adminId || offer.admin2Id === adminId)))
+          .filter((offer: VehicleOffer) => offer.adminStatus === 'Pending')
           .map((offer: VehicleOffer) => {
             const disabled = !adminId || actionedIds[offer.id];
             return (
               <div className="card" key={offer.id} style={{marginBottom: '1.5rem'}}>
                 <h2>{offer.vehicleAdTitle}</h2>
-                <p><strong>Teklif Veren:</strong> {offer.senderId}</p>
-                <p><strong>Alıcı:</strong> {offer.receiverId}</p>
+                <p><strong>Teklif Veren:</strong> {userNames[offer.senderId] || offer.senderId}</p>
+                <p><strong>Alıcı:</strong> {userNames[offer.receiverId] || offer.receiverId}</p>
                 <p><strong>Mesaj:</strong> {offer.message}</p>
                 <p><strong>Durum:</strong> {offer.adminStatus}</p>
                 <p><strong>Bitiş Tarihi:</strong> {offer.expiryDate ? offer.expiryDate.slice(0, 10) : ''}</p>
