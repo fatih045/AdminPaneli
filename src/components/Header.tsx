@@ -3,7 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../slice/authSlice';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  toggleSidebar: () => void;
+  isMobile: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ toggleSidebar, isMobile }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state: any) => state.auth);
@@ -16,20 +21,30 @@ const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo">
-          <h1>Transport Admin Panel</h1>
+        <div className="logo-section">
+          {isMobile && user && (
+            <button className="mobile-menu-btn" onClick={toggleSidebar} aria-label="Toggle Menu">
+              ☰
+            </button>
+          )}
+          <div className="logo">
+            <h1>Transport Admin</h1>
+          </div>
         </div>
         <div className="user-info">
           {user ? (
             <div className="user-controls">
-              <span>Welcome, {user.username}</span>
+              <div className="user-greeting">
+                <span className="user-name">{user.username}</span>
+                <span className="user-role">Administrator</span>
+              </div>
               <button className="logout-btn" onClick={onLogout}>
-                Logout
+                <span>Logout</span>
               </button>
             </div>
           ) : (
             <Link to="/login" className="login-link">
-              Login
+              <span>Login</span>
             </Link>
           )}
         </div>
