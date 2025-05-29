@@ -10,6 +10,8 @@ import VehicleAd from './pages/VehicleAd'
 import CargoAdOffer from './pages/CargoAdOffer'
 import VehicleAdOffer from './pages/VehicleAdOffer'
 import UserManagement from './pages/UserManagement'
+import type {JSX} from "react"
+
 
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
