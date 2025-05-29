@@ -6,6 +6,9 @@ const login = async (userData: any) => {
   
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data));
+    if (response.data.jwtToken) {
+      localStorage.setItem('token', response.data.jwtToken);
+    }
   }
   
   return response.data;
@@ -14,6 +17,7 @@ const login = async (userData: any) => {
 // Logout user
 const logout = () => {
   localStorage.removeItem('user');
+  localStorage.removeItem('token');
 };
 
 // Get current user
