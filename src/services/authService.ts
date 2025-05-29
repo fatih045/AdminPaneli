@@ -1,3 +1,4 @@
+import { register } from '../slice/authSlice';
 import axiosInstance from './baseService';
 
 // Login user (admin)
