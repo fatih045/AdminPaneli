@@ -72,7 +72,7 @@ const VehicleAd: React.FC = () => {
                 <p><strong>Lokasyon:</strong> {ad.city}, {ad.country}</p>
                 <p><strong>Kapasite:</strong> {ad.capacity} kg</p>
                 <p><strong>Durum:</strong> {ad.status}</p>
-                <p><strong>İlan Tarihi:</strong> {ad.adDate}</p>
+                <p><strong>İlan Tarihi:</strong> {ad.adDate.slice(0, 10)}</p>
                 <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
                   <button
                     className="btn btn-primary"

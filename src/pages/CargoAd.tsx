@@ -72,7 +72,7 @@ const CargoAd: React.FC = () => {
                 <p><strong>Çıkış:</strong> {ad.pickCity}, {ad.pickCountry} &rarr; <strong>Varış:</strong> {ad.dropCity}, {ad.dropCountry}</p>
                 <p><strong>Fiyat:</strong> {ad.price} {ad.currency}</p>
                 <p><strong>Durum:</strong> {ad.status}</p>
-                <p><strong>İlan Tarihi:</strong> {ad.adDate}</p>
+                <p><strong>İlan Tarihi:</strong> {ad.adDate.slice(0, 10)}</p>
                 <div style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
                   <button
                     className="btn btn-primary"
