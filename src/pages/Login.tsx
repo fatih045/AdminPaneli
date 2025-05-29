@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../slice/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, reset } from '../slice/authSlice';
+import type { RootState, AppDispatch } from '../store/store';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (isSuccess && user) {
+      navigate('/cargo-ad');
+    }
+    return () => {
+      dispatch(reset());
+    };
+  }, [isSuccess, user, navigate, dispatch]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Login logic will be implemented later
+    dispatch(login({ username, password }));
   };
 
   // Function to bypass login (for development purposes)
@@ -28,7 +39,7 @@ const Login: React.FC = () => {
     localStorage.setItem('user', JSON.stringify(mockUser));
     
     // Update Redux state with the mock user
-    dispatch(setUser(mockUser));
+    dispatch({ type: 'auth/setUser', payload: mockUser });
     
     // Redirect to the main page
     navigate('/cargo-ad');
@@ -59,8 +70,10 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          <button type="submit" className="login-button">Login</button>
-          
+          <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
+          {isError && <div style={{ color: 'red', marginTop: 10 }}>{message}</div>}
           {/* Bypass login button */}
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <button 

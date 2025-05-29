@@ -1,22 +1,8 @@
-import axios from 'axios';
+import axiosInstance from './baseService';
 
-// Base URL will need to be updated with your actual API endpoint
-const API_URL = '/api/auth/';
-
-// Register user
-const register = async (userData: any) => {
-  const response = await axios.post(API_URL + 'register', userData);
-  
-  if (response.data) {
-    localStorage.setItem('user', JSON.stringify(response.data));
-  }
-  
-  return response.data;
-};
-
-// Login user
+// Login user (admin)
 const login = async (userData: any) => {
-  const response = await axios.post(API_URL + 'login', userData);
+  const response = await axiosInstance.post('api/Admin/LoginAdmin', userData);
   
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data));
@@ -39,7 +25,6 @@ const getCurrentUser = () => {
 };
 
 const authService = {
-  register,
   login,
   logout,
   getCurrentUser,

@@ -122,8 +122,9 @@ body {
 
 /* Main Content Styles */
 .main-content {
-  display: flex;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-content {
@@ -284,9 +285,13 @@ body {
 
 /* Content wrapper to push content away from sidebar */
 .content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   margin-left: 250px;
   width: calc(100% - 250px);
   transition: all 0.3s ease;
+  min-height: 100vh;
 }
 
 .content-wrapper.sidebar-collapsed {
@@ -300,6 +305,9 @@ body {
   color: white;
   padding: 1rem 1.5rem;
   margin-top: auto;
+  width: 100%;
+  /* sticky footer için */
+  /* position: sticky; bottom: 0; left: 0; right: 0; z-index: 100; */
 }
 
 .footer-container {
