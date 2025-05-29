@@ -1,51 +1,54 @@
-import axios from 'axios';
+import axiosInstance from './baseService';
 
-// Base URL will need to be updated with your actual API endpoint
-const API_URL = '/api/vehicle-ad-offers/';
+// API endpoints
+const API_ENDPOINTS = {
+  VEHICLE_OFFER: 'api/VehicleOffer',
+  ACCEPT_VEHICLE_OFFER: 'api/Admin/AcceptVehicleOffer',
+  REJECT_VEHICLE_OFFER: 'api/Admin/RejectVehicleOffer',
+};
 
-// Get all vehicle ad offers
-const getAllVehicleAdOffers = async () => {
-  const response = await axios.get(API_URL);
+// Interface for Vehicle Offer
+export interface VehicleOffer {
+  id: number;
+  senderId: string;
+  receiverId: string;
+  vehicleAdId: number;
+  vehicleAdTitle: string;
+  message: string;
+  status: string;
+  admin1Id: string;
+  admin2Id: string;
+  adminStatus: string;
+  expiryDate: string;
+  createdDate: string;
+}
+
+// Interface for Accept/Reject Vehicle Offer Request
+export interface VehicleOfferActionRequest {
+  id: number;
+  adminId: string;
+}
+
+// Get all vehicle offers
+const getAllVehicleOffers = async (): Promise<VehicleOffer[]> => {
+  const response = await axiosInstance.get(API_ENDPOINTS.VEHICLE_OFFER);
   return response.data;
 };
 
-// Get vehicle ad offers by vehicle ad id
-const getOffersByVehicleAdId = async (vehicleAdId: string) => {
-  const response = await axios.get(`${API_URL}?vehicleAdId=${vehicleAdId}`);
-  return response.data;
+// Accept vehicle offer
+const acceptVehicleOffer = async (request: VehicleOfferActionRequest): Promise<void> => {
+  await axiosInstance.post(API_ENDPOINTS.ACCEPT_VEHICLE_OFFER, request);
 };
 
-// Get vehicle ad offer by id
-const getVehicleAdOfferById = async (id: string) => {
-  const response = await axios.get(API_URL + id);
-  return response.data;
-};
-
-// Create new vehicle ad offer
-const createVehicleAdOffer = async (offerData: any) => {
-  const response = await axios.post(API_URL, offerData);
-  return response.data;
-};
-
-// Update vehicle ad offer
-const updateVehicleAdOffer = async (id: string, offerData: any) => {
-  const response = await axios.put(API_URL + id, offerData);
-  return response.data;
-};
-
-// Delete vehicle ad offer
-const deleteVehicleAdOffer = async (id: string) => {
-  const response = await axios.delete(API_URL + id);
-  return response.data;
+// Reject vehicle offer
+const rejectVehicleOffer = async (request: VehicleOfferActionRequest): Promise<void> => {
+  await axiosInstance.post(API_ENDPOINTS.REJECT_VEHICLE_OFFER, request);
 };
 
 const vehicleAdOfferService = {
-  getAllVehicleAdOffers,
-  getOffersByVehicleAdId,
-  getVehicleAdOfferById,
-  createVehicleAdOffer,
-  updateVehicleAdOffer,
-  deleteVehicleAdOffer,
+  getAllVehicleOffers,
+  acceptVehicleOffer,
+  rejectVehicleOffer,
 };
 
 export default vehicleAdOfferService;

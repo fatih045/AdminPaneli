@@ -1,51 +1,55 @@
-import axios from 'axios';
+import axiosInstance from './baseService';
 
-// Base URL will need to be updated with your actual API endpoint
-const API_URL = '/api/cargo-ad-offers/';
+// API endpoints
+const API_ENDPOINTS = {
+  CARGO_OFFER: 'api/CargoOffer',
+  ACCEPT_CARGO_OFFER: 'api/Admin/AcceptCargoOffer',
+  REJECT_CARGO_OFFER: 'api/Admin/RejectCargoOffer',
+};
 
-// Get all cargo ad offers
-const getAllCargoAdOffers = async () => {
-  const response = await axios.get(API_URL);
+// Interface for Cargo Offer
+export interface CargoOffer {
+  id: number;
+  senderId: string;
+  receiverId: string;
+  cargoAdId: number;
+  cargoAdTitle: string;
+  price: number;
+  message: string;
+  status: string;
+  admin1Id: string;
+  admin2Id: string;
+  adminStatus: string;
+  expiryDate: string;
+  createdDate: string;
+}
+
+// Interface for Accept/Reject Cargo Offer Request
+export interface CargoOfferActionRequest {
+  id: number;
+  adminId: string;
+}
+
+// Get all cargo offers
+const getAllCargoOffers = async (): Promise<CargoOffer[]> => {
+  const response = await axiosInstance.get(API_ENDPOINTS.CARGO_OFFER);
   return response.data;
 };
 
-// Get cargo ad offers by cargo ad id
-const getOffersByCargoAdId = async (cargoAdId: string) => {
-  const response = await axios.get(`${API_URL}?cargoAdId=${cargoAdId}`);
-  return response.data;
+// Accept cargo offer
+const acceptCargoOffer = async (request: CargoOfferActionRequest): Promise<void> => {
+  await axiosInstance.post(API_ENDPOINTS.ACCEPT_CARGO_OFFER, request);
 };
 
-// Get cargo ad offer by id
-const getCargoAdOfferById = async (id: string) => {
-  const response = await axios.get(API_URL + id);
-  return response.data;
-};
-
-// Create new cargo ad offer
-const createCargoAdOffer = async (offerData: any) => {
-  const response = await axios.post(API_URL, offerData);
-  return response.data;
-};
-
-// Update cargo ad offer
-const updateCargoAdOffer = async (id: string, offerData: any) => {
-  const response = await axios.put(API_URL + id, offerData);
-  return response.data;
-};
-
-// Delete cargo ad offer
-const deleteCargoAdOffer = async (id: string) => {
-  const response = await axios.delete(API_URL + id);
-  return response.data;
+// Reject cargo offer
+const rejectCargoOffer = async (request: CargoOfferActionRequest): Promise<void> => {
+  await axiosInstance.post(API_ENDPOINTS.REJECT_CARGO_OFFER, request);
 };
 
 const cargoAdOfferService = {
-  getAllCargoAdOffers,
-  getOffersByCargoAdId,
-  getCargoAdOfferById,
-  createCargoAdOffer,
-  updateCargoAdOffer,
-  deleteCargoAdOffer,
+  getAllCargoOffers,
+  acceptCargoOffer,
+  rejectCargoOffer,
 };
 
 export default cargoAdOfferService;
