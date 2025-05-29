@@ -26,7 +26,7 @@ export const getAllCargoAds = createAsyncThunk(
   'cargoAd/getAllCargoAds',
   async (_, thunkAPI) => {
     try {
-      return await cargoAdService.getAllCargoAds();
+      return await cargoAdService.getAllCargoAds(0);
     } catch (error: any) {
       const message = error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);

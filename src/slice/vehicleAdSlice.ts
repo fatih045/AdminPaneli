@@ -26,7 +26,7 @@ export const getAllVehicleAds = createAsyncThunk(
   'vehicleAd/getAllVehicleAds',
   async (_, thunkAPI) => {
     try {
-      return await vehicleAdService.getAllVehicleAds();
+      return await vehicleAdService.getAllVehicleAds(0);
     } catch (error: any) {
       const message = error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);

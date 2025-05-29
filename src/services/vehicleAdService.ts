@@ -31,9 +31,9 @@ export interface VehicleAdActionRequest {
   adminId: string;
 }
 
-// Get all vehicle ads
-const getAllVehicleAds = async (): Promise<VehicleAd[]> => {
-  const response = await axiosInstance.get(API_ENDPOINTS.VEHICLE_AD);
+// Get all vehicle ads (with status query)
+const getAllVehicleAds = async (status: number = 0): Promise<VehicleAd[]> => {
+  const response = await axiosInstance.get(`${API_ENDPOINTS.VEHICLE_AD}?status=${status}`);
   return response.data;
 };
 

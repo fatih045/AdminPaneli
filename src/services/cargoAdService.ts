@@ -36,9 +36,9 @@ export interface CargoAdActionRequest {
   adminId: string;
 }
 
-// Get all cargo ads
-const getAllCargoAds = async (): Promise<CargoAd[]> => {
-  const response = await axiosInstance.get(API_ENDPOINTS.CARGO_AD);
+// Get all cargo ads (with status query)
+const getAllCargoAds = async (status: number = 0): Promise<CargoAd[]> => {
+  const response = await axiosInstance.get(`${API_ENDPOINTS.CARGO_AD}?status=${status}`);
   return response.data;
 };
 
@@ -47,11 +47,6 @@ const getCargoAdById = async (id: number): Promise<CargoAd> => {
   const response = await axiosInstance.get(`${API_ENDPOINTS.CARGO_AD}/${id}`);
   return response.data;
 };
-
-
-
-
-
 
 // Delete cargo ad
 const deleteCargoAd = async (id: number): Promise<void> => {
