@@ -1,17 +1,28 @@
-import { register } from '../slice/authSlice';
 import axiosInstance from './baseService';
 
-// Login user (admin)
-const login = async (userData: any) => {
-  const response = await axiosInstance.post('api/Admin/LoginAdmin', userData);
-  
+// Register user (admin)
+const register = async (userData: any) => {
+  const response = await axiosInstance.post('api/Admin/RegisterAdmin', userData); // API endpointini kendi backend'ine göre değiştir
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data));
     if (response.data.jwtToken) {
       localStorage.setItem('token', response.data.jwtToken);
     }
   }
-  
+  return response.data;
+};
+
+// Login user (admin)
+const login = async (userData: any) => {
+  const response = await axiosInstance.post('api/Admin/LoginAdmin', userData);
+
+  if (response.data) {
+    localStorage.setItem('user', JSON.stringify(response.data));
+    if (response.data.jwtToken) {
+      localStorage.setItem('token', response.data.jwtToken);
+    }
+  }
+
   return response.data;
 };
 
@@ -25,11 +36,11 @@ const logout = () => {
 const getCurrentUser = () => {
   const userStr = localStorage.getItem('user');
   if (userStr) return JSON.parse(userStr);
-  
   return null;
 };
 
 const authService = {
+  register, // ✅ Buraya ekledik
   login,
   logout,
   getCurrentUser,
