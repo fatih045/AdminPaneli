@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../services/baseService';
 
+interface User {
+  id: string;
+  userName: string;
+  isLocked: boolean;
+  lockoutEnd: string | null;
+}
+
 const UserManagement: React.FC = () => {
-  const [users, setUsers] = useState<{id: string, userName: string}[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const [processing, setProcessing] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://evrenblackbird.com/AllUsers');
-      const data = await response.json();
-      setUsers(data);
+      const response = await axiosInstance.get('AllUsers');
+      setUsers(response.data);
     } catch (err) {
       setError('Kullanıcılar alınamadı.');
     } finally {
@@ -25,15 +31,16 @@ const UserManagement: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const handleBlock = async (id: string) => {
-    setDeleting(id);
+  const handleBlockUnblock = async (id: string, isLocked: boolean) => {
+    setProcessing(id);
     try {
-      await axiosInstance.delete(`${id}`);
-      await fetchUsers(); // Silme sonrası tekrar çek
+      const endpoint = isLocked ? `Unlock/${id}` : `Lockout/${id}`;
+      await axiosInstance.post(endpoint);
+      await fetchUsers(); 
     } catch (err) {
-      alert('Kullanıcı silinemedi!');
+      alert(isLocked ? 'Kullanıcı kilidi açılamadı!' : 'Kullanıcı kilitlenemedi!');
     } finally {
-      setDeleting(null);
+      setProcessing(null);
     }
   };
 
@@ -47,13 +54,21 @@ const UserManagement: React.FC = () => {
           {users.map(user => (
             <div key={user.id} className="card" style={{padding: '1rem', border: '1px solid #ccc', borderRadius: 8, minWidth: 220}}>
               <div><strong>User Name:</strong> {user.userName}</div>
+              <div><strong>Status:</strong> {user.isLocked ? 'Blocked' : 'Active'}</div>
               <button
-                className="btn btn-danger"
-                style={{marginTop: 12, width: '100%', opacity: deleting === user.id ? 0.6 : 1}}
-                onClick={() => handleBlock(user.id)}
-                disabled={deleting === user.id}
+                className={user.isLocked ? "btn btn-success" : "btn btn-danger"}
+                style={{
+                  marginTop: 12, 
+                  width: '100%', 
+                  opacity: processing === user.id ? 0.6 : 1,
+                  backgroundColor: user.isLocked ? '#28a745' : '#dc3545'
+                }}
+                onClick={() => handleBlockUnblock(user.id, user.isLocked)}
+                disabled={processing === user.id}
               >
-                {deleting === user.id ? 'Blocking...' : 'Block'}
+                {processing === user.id 
+                  ? (user.isLocked ? 'Unblocking...' : 'Blocking...') 
+                  : (user.isLocked ? 'Unblock' : 'Block')}
               </button>
             </div>
           ))}
