@@ -17,8 +17,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
   // Navigation items configuration
   const navItems = [
-    { path: '/cargo-ad', icon: '📦', text: 'Cargo Advertisements' },
-    { path: '/vehicle-ad', icon: '🚚', text: 'Vehicle Advertisements' },
+    { path: '/cargo-ad', icon: '📦', text: 'Cargo Ad' },
+    { path: '/vehicle-ad', icon: '🚚', text: 'Vehicle Ad' },
     { path: '/cargo-ad-offer', icon: '📋', text: 'Cargo Ad Offers' },
     { path: '/vehicle-ad-offer', icon: '🔄', text: 'Vehicle Ad Offers' },
     { path: '/user-management', icon: '👥', text: 'User Management' },
